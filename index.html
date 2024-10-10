@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read-pdf</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="node_modules/turn.js/css/turn.css">
+</head>
+<body>
+    <div class="upload-container">
+        <input type="file" id="file-input" accept="application/pdf">
+    </div>
+    <div class="zoom-controls">
+        <button id="zoom-in">Zoom In</button>
+        <button id="zoom-out">Zoom Out</button>
+    </div>
+    <div id="pdf-container" class="pdf-container">
+        <div id="book" class="turnjs"></div>
+    </div>
+    <script src="node_modules/pdfjs-dist/build/pdf.min.js"></script>
+    <script src="node_modules/turn.js/lib/turn.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

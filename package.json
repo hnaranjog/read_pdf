@@ -1,0 +1,17 @@
+{
+  "name": "read_pdf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "flipbook": "^0.0.2",
+    "pdfjs-dist": "^4.7.76",
+    "turn.js": "^1.0.5"
+  }
+}
