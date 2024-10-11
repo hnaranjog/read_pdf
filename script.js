@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fileReader.onload = function() {
             var typedarray = new Uint8Array(this.result);
 
-            // Set the workerSrc property
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.min.js';
+            // Set the workerSrc property to the CDN path
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
@@ -38,47 +38,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.getElementById('prev-page').addEventListener('click', function() {
+        $('#book').turn('previous');
+    });
+
+    document.getElementById('next-page').addEventListener('click', function() {
+        $('#book').turn('next');
+    });
+
     function renderPDF() {
-        if (!pdfDoc) {
-            return;
-        }
+        if (!pdfDoc) return;
 
-        const book = document.getElementById('book');
-        book.innerHTML = '';
+        const pdfContainer = document.getElementById('pdf-container');
+        pdfContainer.innerHTML = ''; // Clear previous content
 
-        let pagesRendered = 0;
+        const turnContainer = document.createElement('div');
+        turnContainer.id = 'book';
+        turnContainer.classList.add('turnjs');
+        pdfContainer.appendChild(turnContainer);
 
+        const promises = [];
         for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-            pdfDoc.getPage(pageNum).then(function(page) {
+            promises.push(pdfDoc.getPage(pageNum).then(function(page) {
                 const viewport = page.getViewport({ scale: currentScale });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
 
-                page.render({
+                const renderContext = {
                     canvasContext: context,
                     viewport: viewport
-                }).promise.then(function() {
+                };
+
+                return page.render(renderContext).promise.then(function() {
                     const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
+                    pageDiv.classList.add('page');
                     pageDiv.appendChild(canvas);
-                    book.appendChild(pageDiv);
-
-                    pagesRendered++;
-                    if (pagesRendered === pdfDoc.numPages) {
-                        initializeTurnJS();
-                    }
+                    turnContainer.appendChild(pageDiv);
                 });
-            });
+            }));
         }
-    }
 
-    function initializeTurnJS() {
-        $('#book').turn({
-            width: document.getElementById('pdf-container').clientWidth,
-            height: document.getElementById('pdf-container').clientHeight,
-            autoCenter: true
+        Promise.all(promises).then(function() {
+            // Initialize the turn.js library after all pages are rendered
+            $(turnContainer).turn({
+                width: pdfContainer.clientWidth,
+                height: pdfContainer.clientHeight,
+                autoCenter: true,
+                display: 'double'
+            });
         });
     }
 });
