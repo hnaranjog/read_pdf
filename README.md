@@ -40,7 +40,7 @@ git clone https://github.com/hnaranjog/read_pdf.git
 
 #Capturas de Pantalla
 
-[![App Screenshot]((https://i.postimg.cc/vHR6MyD1/img02.png)](https://postimg.cc/Yj3SfJ6k)
+[![App Screenshot](https://i.postimg.cc/vHR6MyD1/img02.png)](https://postimg.cc/Yj3SfJ6k)
 
 #Contribución
 Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, por favor sigue los siguientes pasos:
