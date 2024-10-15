@@ -10,37 +10,34 @@
 
 </head>
 <body>
+    <nav class="navbar">
+        <div class="brand">Read-PDF</div>
+    </nav>
     <div class="main">
         <div class="upload-container">
             <input type="file" id="file-input" accept="application/pdf">
+            <label for="file-input">Upload PDF</label>
+            <div class="file-name" id="file-name"></div>
         </div>
-        <div class="zoom-controls">
-            <button id="zoom-in" class="btn-zoom">
-                <span class="material-symbols-outlined">
-                    zoom_in
-                </span>
-            </button>
-            <button id="zoom-out" class="btn-zoom">
-                <span class="material-symbols-outlined">
-                   zoom_out
-                </span>
-            </button>
-        </div>
+
         <div id="pdf-container" class="pdf-container">
             <div id="book" class="turnjs"></div>
         </div>
-        <div class="navigation-controls">
-            <button id="prev-page">
-                <span class="material-symbols-outlined">
-                    arrow_back
-                </span>
-            </button>
-            <button id="next-page">
-                <span class="material-symbols-outlined">
-                    arrow_forward
-                </span>
-            </button>
+        <div class="options-sel">
+            <div class="navigation-controls">
+                <button id="prev-page" class="btn-style">
+                    <span class="material-symbols-outlined">
+                        arrow_back
+                    </span>
+                </button>
+                <button id="next-page" class="btn-style">
+                    <span class="material-symbols-outlined">
+                        arrow_forward
+                    </span>
+                </button>
+            </div>
         </div>
+        <div id="spinner" class="spinner"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>

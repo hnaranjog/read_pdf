@@ -2,12 +2,22 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentScale = 1.5;
     let pdfDoc = null;
 
+    const spinner = document.getElementById('spinner');
+
     document.getElementById('file-input').addEventListener('change', function(event) {
         var file = event.target.files[0];
         if (file.type !== 'application/pdf') {
             alert('Please upload a PDF file.');
             return;
         }
+
+        // Mostrar el nombre del archivo seleccionado
+        const fileNameElement = document.getElementById('file-name');
+        if (fileNameElement) {
+            fileNameElement.textContent = file.name;
+        }
+
+        spinner.style.display = 'block'; // Show spinner
 
         var fileReader = new FileReader();
         fileReader.onload = function() {
@@ -19,23 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
                 renderPDF();
+                spinner.style.display = 'none'; // Hide spinner
             }).catch(function(error) {
                 console.error('Error loading PDF: ' + error);
+                spinner.style.display = 'none'; // Hide spinner
             });
         };
         fileReader.readAsArrayBuffer(file);
-    });
-
-    document.getElementById('zoom-in').addEventListener('click', function() {
-        currentScale += 0.1;
-        renderPDF();
-    });
-
-    document.getElementById('zoom-out').addEventListener('click', function() {
-        if (currentScale > 0.5) {
-            currentScale -= 0.1;
-            renderPDF();
-        }
     });
 
     document.getElementById('prev-page').addEventListener('click', function() {
@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('next-page').addEventListener('click', function() {
         $('#book').turn('next');
+    });
+
+    window.addEventListener('resize', function() {
+        renderPDF();
     });
 
     function renderPDF() {
@@ -81,13 +85,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         Promise.all(promises).then(function() {
+            // Determine the display mode based on window width
+            const displayMode = window.innerWidth < 768 ? 'single' : 'double';
+
             // Initialize the turn.js library after all pages are rendered
             $(turnContainer).turn({
                 width: pdfContainer.clientWidth,
                 height: pdfContainer.clientHeight,
                 autoCenter: true,
-                display: 'double'
+                display: displayMode
             });
+
+            spinner.style.display = 'none'; // Hide spinner after all pages are rendered
+        }).catch(function(error) {
+            console.error('Error rendering PDF: ' + error);
+            spinner.style.display = 'none'; // Hide spinner on error
         });
     }
 });
