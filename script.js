@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let pdfDoc = null;
 
     const spinner = document.getElementById('spinner');
+    const pdfContainer = document.getElementById('pdf-container');
+
 
     document.getElementById('file-input').addEventListener('change', function(event) {
         var file = event.target.files[0];
@@ -18,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         spinner.style.display = 'block'; // Show spinner
+        pdfContainer.style.visibility = 'hidden'; // Hide PDF container
 
         var fileReader = new FileReader();
         fileReader.onload = function() {
@@ -29,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
                 renderPDF();
-                spinner.style.display = 'none'; // Hide spinner
             }).catch(function(error) {
                 console.error('Error loading PDF: ' + error);
                 spinner.style.display = 'none'; // Hide spinner
@@ -53,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderPDF() {
         if (!pdfDoc) return;
 
-        const pdfContainer = document.getElementById('pdf-container');
         pdfContainer.innerHTML = ''; // Clear previous content
 
         const turnContainer = document.createElement('div');
@@ -97,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             spinner.style.display = 'none'; // Hide spinner after all pages are rendered
+            pdfContainer.style.visibility = 'visible'; // Show PDF container
         }).catch(function(error) {
             console.error('Error rendering PDF: ' + error);
             spinner.style.display = 'none'; // Hide spinner on error

@@ -1,0 +1,4 @@
+"scripts": {
+  "start": "cross-env NODE_NO_WARNINGS=1 http-server -a 127.0.0.1 -p 9000 -c-1 .",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}

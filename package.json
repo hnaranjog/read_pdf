@@ -1,9 +1,10 @@
 {
   "name": "read_pdf",
   "version": "1.0.0",
-  "description": "",
+  "description": "Read-pdf version web",
   "main": "script.js",
   "scripts": {
+    "start": "http-server -a 127.0.0.1 -p 9000 -c-1 .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,5 +14,9 @@
     "flipbook": "^0.0.2",
     "pdfjs-dist": "^4.7.76",
     "turn.js": "^1.0.5"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "http-server": "^14.1.1"
   }
 }
