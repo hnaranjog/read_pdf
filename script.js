@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let currentScale = 1.5;
     let pdfDoc = null;
+    let currentPage = 1;
+    const pagesToRenderInitially = 5; // Number of pages to render initially
+    const pagesToRenderOnNext = 5; // Number of pages to render on each next button click
 
     const spinner = document.getElementById('spinner');
     const pdfContainer = document.getElementById('pdf-container');
+    const fileInput = document.getElementById('file-input');
 
+    fileInput.addEventListener('change', function(event) {
+        // Run cleanup before loading a new file
+        cleanup();
 
-    document.getElementById('file-input').addEventListener('change', function(event) {
         var file = event.target.files[0];
         if (file.type !== 'application/pdf') {
             alert('Please upload a PDF file.');
@@ -31,10 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
-                renderPDF();
+                renderInitialPages();
             }).catch(function(error) {
                 console.error('Error loading PDF: ' + error);
-                spinner.style.display = 'none'; // Hide spinner
+                spinner.style.display = 'none'; // Hide spinner on error
             });
         };
         fileReader.readAsArrayBuffer(file);
@@ -44,7 +49,22 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#book').turn('previous');
     });
 
-    document.getElementById('next-page').addEventListener('click', function() {
+    document.getElementById('next-page').addEventListener('click', async function() {
+        const turnContainer = document.getElementById('book');
+        const totalPages = pdfDoc.numPages;
+
+        if (currentPage <= totalPages) {
+            for (let i = 0; i < pagesToRenderOnNext; i++) {
+                if (currentPage <= totalPages) {
+                    await renderPage(currentPage, turnContainer);
+                    currentPage++;
+                }
+            }
+
+            // Update turn.js with the new pages
+            $(turnContainer).turn('update');
+        }
+
         $('#book').turn('next');
     });
 
@@ -52,9 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderPDF();
     });
 
-    function renderPDF() {
-        if (!pdfDoc) return;
-
+    async function renderInitialPages() {
         pdfContainer.innerHTML = ''; // Clear previous content
 
         const turnContainer = document.createElement('div');
@@ -62,46 +80,62 @@ document.addEventListener('DOMContentLoaded', function() {
         turnContainer.classList.add('turnjs');
         pdfContainer.appendChild(turnContainer);
 
-        const promises = [];
-        for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-            promises.push(pdfDoc.getPage(pageNum).then(function(page) {
-                const viewport = page.getViewport({ scale: currentScale });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-
-                return page.render(renderContext).promise.then(function() {
-                    const pageDiv = document.createElement('div');
-                    pageDiv.classList.add('page');
-                    pageDiv.appendChild(canvas);
-                    turnContainer.appendChild(pageDiv);
-                });
-            }));
+        for (let i = 0; i < pagesToRenderInitially; i++) {
+            if (currentPage <= pdfDoc.numPages) {
+                await renderPage(currentPage, turnContainer);
+                currentPage++;
+            }
         }
 
-        Promise.all(promises).then(function() {
-            // Determine the display mode based on window width
-            const displayMode = window.innerWidth < 768 ? 'single' : 'double';
-
-            // Initialize the turn.js library after all pages are rendered
-            $(turnContainer).turn({
-                width: pdfContainer.clientWidth,
-                height: pdfContainer.clientHeight,
-                autoCenter: true,
-                display: displayMode
-            });
-
-            spinner.style.display = 'none'; // Hide spinner after all pages are rendered
-            pdfContainer.style.visibility = 'visible'; // Show PDF container
-        }).catch(function(error) {
-            console.error('Error rendering PDF: ' + error);
-            spinner.style.display = 'none'; // Hide spinner on error
+        // Initialize the turn.js library after initial pages are rendered
+        $(turnContainer).turn({
+            width: pdfContainer.clientWidth,
+            height: pdfContainer.clientHeight,
+            autoCenter: true,
+            display: 'double'
         });
+
+        spinner.style.display = 'none'; // Hide spinner after initial pages are rendered
+        pdfContainer.style.visibility = 'visible'; // Show PDF container
     }
+
+    async function renderPage(pageNum, turnContainer) {
+        const page = await pdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+        };
+
+        await page.render(renderContext).promise;
+        const pageDiv = document.createElement('div');
+        pageDiv.classList.add('page');
+        pageDiv.appendChild(canvas);
+        turnContainer.appendChild(pageDiv);
+
+        // Update turn.js with the new page
+        $(turnContainer).turn('addPage', pageDiv, pageNum);
+    }
+
+    function cleanup() {
+        // Clear the file input
+        fileInput.value = '';
+
+        // Release the PDF document
+        if (pdfDoc) {
+            pdfDoc.destroy();
+            pdfDoc = null;
+        }
+
+        // Clear the PDF container
+        pdfContainer.innerHTML = '';
+    }
+
+    // Add cleanup on window unload
+    window.addEventListener('beforeunload', cleanup);
 });
