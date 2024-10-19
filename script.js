@@ -7,11 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const spinner = document.getElementById('spinner');
     const pdfContainer = document.getElementById('pdf-container');
     const fileInput = document.getElementById('file-input');
-
+    const currentPageElement = document.getElementById('current-page');
+    const totalPagesElement = document.getElementById('total-pages');
+    const fileInfoElement = document.getElementById('file-info');
+    const fileNameElement = document.getElementById('file-name');
+    
     fileInput.addEventListener('change', function(event) {
-        // Run cleanup before loading a new file
-        cleanup();
-
         var file = event.target.files[0];
         if (file.type !== 'application/pdf') {
             alert('Please upload a PDF file.');
@@ -19,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Mostrar el nombre del archivo seleccionado
-        const fileNameElement = document.getElementById('file-name');
         if (fileNameElement) {
             fileNameElement.textContent = file.name;
         }
@@ -36,43 +36,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
+                totalPagesElement.textContent = pdf.numPages;
+                currentPage = 1; // Reset currentPage to 1
                 renderInitialPages();
-            }).catch(function(error) {
-                console.error('Error loading PDF: ' + error);
-                spinner.style.display = 'none'; // Hide spinner on error
             });
         };
         fileReader.readAsArrayBuffer(file);
     });
 
-    document.getElementById('prev-page').addEventListener('click', function() {
-        $('#book').turn('previous');
-    });
-
-    document.getElementById('next-page').addEventListener('click', async function() {
-        const turnContainer = document.getElementById('book');
-        const totalPages = pdfDoc.numPages;
-
-        if (currentPage <= totalPages) {
-            for (let i = 0; i < pagesToRenderOnNext; i++) {
-                if (currentPage <= totalPages) {
-                    await renderPage(currentPage, turnContainer);
-                    currentPage++;
-                }
-            }
-
-            // Update turn.js with the new pages
-            $(turnContainer).turn('update');
+    async function renderInitialPages() {
+        // Check if the file is an upload file
+        if (isUploadFile()) {
+            console.log('Upload file detected. Skipping rendering.');
+            return;
         }
 
-        $('#book').turn('next');
-    });
-
-    window.addEventListener('resize', function() {
-        renderPDF();
-    });
-
-    async function renderInitialPages() {
         pdfContainer.innerHTML = ''; // Clear previous content
 
         const turnContainer = document.createElement('div');
@@ -80,12 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
         turnContainer.classList.add('turnjs');
         pdfContainer.appendChild(turnContainer);
 
-        for (let i = 0; i < pagesToRenderInitially; i++) {
-            if (currentPage <= pdfDoc.numPages) {
-                await renderPage(currentPage, turnContainer);
-                currentPage++;
+        for (let i = 1; i <= pagesToRenderInitially; i++) {
+            if (currentPage + i - 1 <= pdfDoc.numPages) {
+                await renderPage(currentPage + i - 1, turnContainer);
             }
         }
+        //await renderPages(1, pagesToRenderInitially, turnContainer);
 
         // Initialize the turn.js library after initial pages are rendered
         $(turnContainer).turn({
@@ -94,32 +72,74 @@ document.addEventListener('DOMContentLoaded', function() {
             autoCenter: true,
             display: 'double'
         });
-
+        
         spinner.style.display = 'none'; // Hide spinner after initial pages are rendered
         pdfContainer.style.visibility = 'visible'; // Show PDF container
+
+
+        updatePaginator(); // Update paginator after initial pages are rendered
+    }
+
+    async function renderPages(startPage, numPages, turnContainer) {
+        if (!pdfDoc) {
+            console.error('PDF document is not loaded.');
+            return;
+        }
+
+        const promises = [];
+        for (let i = 0; i < numPages; i++) {
+            if (startPage + i <= pdfDoc.numPages) {
+                promises.push(renderPage(startPage + i, turnContainer));
+            }
+        }
+        await Promise.all(promises);
     }
 
     async function renderPage(pageNum, turnContainer) {
-        const page = await pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        try {
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-        const renderContext = {
-            canvasContext: context,
-            viewport: viewport
-        };
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
 
-        await page.render(renderContext).promise;
-        const pageDiv = document.createElement('div');
-        pageDiv.classList.add('page');
-        pageDiv.appendChild(canvas);
-        turnContainer.appendChild(pageDiv);
+            await page.render(renderContext).promise;
+            const pageDiv = document.createElement('div');
+            pageDiv.classList.add('page');
+            pageDiv.appendChild(canvas);
+            turnContainer.appendChild(pageDiv);
 
-        // Update turn.js with the new page
-        $(turnContainer).turn('addPage', pageDiv, pageNum);
+            // Update turn.js with the new page
+            $(turnContainer).turn('addPage', pageDiv, pageNum);
+        } catch (error) {
+            console.error('Error rendering page ' + pageNum + ': ' + error);
+        }
+    }
+
+    // Dummy function to check if the file is an upload file
+    function isUploadFile() {
+        // Implement your logic to determine if the file is an upload file
+        return false; // Change this to your actual condition
+    }
+
+    function updatePaginator() {
+        currentPageElement.textContent = currentPage;
+    }
+
+    function renderPDF(view) {
+        // Implement your logic to render the PDF based on the view
+        console.log('Rendering PDF in ' + view + ' view.');
+        const turnContainer = document.getElementById('book');
+        if (turnContainer) {
+            turnContainer.innerHTML = ''; // Clear previous content
+            renderPages(currentPage, pagesToRenderOnNext, turnContainer);
+        }
     }
 
     function cleanup() {
@@ -138,4 +158,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add cleanup on window unload
     window.addEventListener('beforeunload', cleanup);
+
+    // Add event listener for viewport changes
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    mediaQuery.addEventListener('change', handleViewportChange);
+    handleViewportChange(mediaQuery);
+
+    function handleViewportChange(e) {
+        if (e.matches) {
+            // Viewport is less than 768px
+            renderPDF('single');
+        } else {
+            // Viewport is 768px or greater
+            renderPDF('double');
+        }
+    }
+
+    document.getElementById('prev-page').addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPDF('current');
+            updatePaginator();
+        }
+    });
+
+    document.getElementById('next-page').addEventListener('click', function() {
+        if (currentPage < pdfDoc.numPages) {
+            currentPage++;
+            renderPDF('current');
+            updatePaginator();
+        }
+    });
 });
