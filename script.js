@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pdfDoc = null;
     let currentPage = 1;
     const pagesToRenderInitially = 5; // Number of pages to render initially
-    const pagesToRenderOnNext = 2; // Number of pages to render on each next button click
+    const pagesToRenderOnNext = 5; // Number of pages to render on each next button click
 
     const spinner = document.getElementById('spinner');
     const pdfContainer = document.getElementById('pdf-container');
