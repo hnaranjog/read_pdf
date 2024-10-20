@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileInfoElement = document.getElementById('file-info');
     const fileNameElement = document.getElementById('file-name');
 
+    const infoButton = document.getElementById('info-button');
+    const infoPopup = document.getElementById('info-popup');
+    const closeButton = document.querySelector('.close-button');
+    const fileNameInfo = document.getElementById('file-name-info');
+    const fileSizeInfo = document.getElementById('file-size-info');
+    const fileDateInfo = document.getElementById('file-date-info');
+
     fileInput.addEventListener('change', function(event) {
         var file = event.target.files[0];
         if (!file) {
@@ -28,6 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (fileNameElement) {
             fileNameElement.textContent = file.name;
         }
+
+        // Mostrar la información del archivo en el popup
+        fileNameInfo.textContent = 'Name: ' + file.name;
+        fileSizeInfo.textContent = 'Size: ' + (file.size / 1024).toFixed(2) + ' KB';
+        fileDateInfo.textContent = 'Last Modified: ' + new Date(file.lastModified).toLocaleDateString();
+
+        // Mostrar el botón de información
+        infoButton.style.display = 'block';
 
         spinner.style.display = 'block'; // Show spinner
         pdfContainer.style.visibility = 'hidden'; // Hide PDF container
@@ -55,6 +70,20 @@ document.addEventListener('DOMContentLoaded', function() {
         fileReader.readAsArrayBuffer(file);
     });
 
+    infoButton.addEventListener('click', function() {
+        infoPopup.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', function() {
+        infoPopup.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == infoPopup) {
+            infoPopup.style.display = 'none';
+        }
+    });
+
     document.getElementById('prev-page').addEventListener('click', function() {
         $('#book').turn('previous');
         if (currentPage > 1) {
@@ -67,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const turnContainer = document.getElementById('book');
         const totalPages = pdfDoc.numPages;
 
-        if (currentPage < totalPages) {
+        if (currentPage + 2 <= totalPages) {
             await renderPages(currentPage + 1, pagesToRenderOnNext, turnContainer);
             currentPage += 2;
             updatePaginator();

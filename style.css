@@ -49,6 +49,35 @@ body {
     
 }
 
+/* Estilos para la información del archivo */
+.file-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* Estilos para el nombre del archivo */
+.file-name {
+    margin-right: 10px;
+}
+
+/* Estilos para el botón de información */
+.info-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: rgb(25, 109, 25);;
+    border: 1px transparent;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.info-button .material-symbols-outlined {
+    font-size: 24px;
+}
+
 .upload-container input[type="file"] {
     display: none;
 }
@@ -71,7 +100,7 @@ body {
     margin-top: 1rem;
     padding-left: 15px;
     font-size: 16px;
-    color: green;
+    color: rgb(25, 109, 25);
 }
 
 .btn-style {
@@ -80,6 +109,7 @@ body {
     background-color: #FF5722; /* Naranja Oscuro */
     border: 1px solid #FF8A50; /* Naranja Claro */
     border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow */
 }
 
 .btn-style:hover {
@@ -88,7 +118,7 @@ body {
 }
 
 .pdf-container {
-    width: 90%;
+    width: 1200px;
     height: 80vh;
     overflow: hidden;
     border: 1px solid #CCCCCC; /* Gris Claro */
@@ -197,9 +227,77 @@ body {
     pointer-events: none;
 }
 
+.paginator {
+    display: flex;
+    justify-content: center; /* Center the text horizontally */
+    align-items: center; /* Center the text vertically */
+    padding: 0.5rem;
+    width: 40%;
+    font-family: Arial, sans-serif;
+    color: #696666;
+    border: 1px dashed #696666; /* Change border to dashed line */
+    border-radius: 5px;
+    font-weight: bold; /* Make the text bold */
+    text-align: center; /* Ensure text is centered within the flex container */
+}
+
+.paginator span {
+    width: auto; /* Adjust width to auto to prevent stretching */
+    white-space: pre;
+    text-align: center; /* Center text within the span */
+}
+
 /* Media Queries for responsive */
 @media (max-width: 768px) {
     .upload-container {
         flex-direction: column;
     }
+}
+
+/* Estilos para el popup */
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 15px;
+}
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para la card */
+.card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    word-wrap: break-word; /* Permite que las palabras largas se dividan */
+    overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto que se desborda */
 }

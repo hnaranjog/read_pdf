@@ -17,9 +17,15 @@
         <div class="upload-container">
             <input type="file" id="file-input" accept="application/pdf">
             <label for="file-input">Upload PDF</label>
-            <div class="file-name" id="file-name"></div>
+            <div class="file-info">
+                <div class="file-name" id="file-name"></div>
+                <button id="info-button" class="info-button" style="display: none;">
+                    <span class="material-symbols-outlined">
+                        info
+                    </span>
+                </button>
+            </div>
         </div>
-        
         <div id="pdf-container" class="pdf-container">
             <div id="book" class="turnjs">
                 <div class="pdf-description">Here your pdf file</div>
@@ -42,7 +48,20 @@
             </div>
         </div>
         <div class="paginator">
-            <span id="current-page">1</span> / <span id="total-pages">0</span>
+            Page <span id="current-page"> 1 </span> of <span id="total-pages"> 0</span>
+        </div>
+    </div>
+
+    <div id="info-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-button">&times;</span>
+            <div class="card">
+                <h2>File Information</h2>
+                <p id="file-name-info"></p>
+                <p id="file-size-info"></p>
+                <p id="file-date-info"></p>
+                <!-- Puedes agregar más información aquí -->
+            </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
