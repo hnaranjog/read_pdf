@@ -12,7 +12,18 @@
 <body>
     <nav class="navbar">
         <div class="brand">Read-PDF</div>
+        <button id="toggle-sidenav" class="sidenav-btn">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
     </nav>
+    <div id="sidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="close-sidenav">&times;</a>
+        <img src="./assets/img/avatar.png" alt="Profile Avatar" class="avatar">
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+        <a href="#">Link 4</a>
+    </div>
     <div class="main">
         <div class="upload-container">
             <input type="file" id="file-input" accept="application/pdf">
@@ -32,7 +43,6 @@
             </div>
             <div class="page-shadow"></div>
         </div>
-        <div id="spinner" class="spinner"></div>
         <div class="options-sel">
             <div class="navigation-controls">
                 <button id="prev-page" class="btn-style">
@@ -47,8 +57,9 @@
                 </button>
             </div>
         </div>
+        <div id="spinner" class="spinner"></div>
         <div class="paginator">
-            Page <span id="current-page"> 1 </span> of <span id="total-pages"> 0</span>
+            Page <span id="current-page" class="page-indicator"> 1 </span> of <span id="total-pages" class="page-indicator"> 0</span>
         </div>
     </div>
 

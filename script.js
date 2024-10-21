@@ -19,6 +19,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileSizeInfo = document.getElementById('file-size-info');
     const fileDateInfo = document.getElementById('file-date-info');
 
+    const sidenav = document.getElementById('sidenav');
+    const toggleSidenavButton = document.getElementById('toggle-sidenav');
+    const closeSidenavButton = document.getElementById('close-sidenav');
+
+    toggleSidenavButton.addEventListener('click', function() {
+        if (sidenav.style.width === '250px') {
+            sidenav.style.width = '0';
+        } else {
+            sidenav.style.width = '250px';
+        }
+    });
+
+    closeSidenavButton.addEventListener('click', function() {
+        sidenav.style.width = '0';
+    });
+
     fileInput.addEventListener('change', function(event) {
         var file = event.target.files[0];
         if (!file) {
