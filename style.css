@@ -19,13 +19,36 @@ body {
     z-index: 1000;
 }
 
+/* Estilos para el botón de navegación */
+.navbar .sidenav-btn {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 15px;
+    margin-left: -6rem; /* Move the button 10px to the left */
+}
+
+.navbar .sidenav-btn .material-symbols-outlined {
+    font-size: 24px;
+}
+
+.avatar {
+    background: #aaa;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 10px auto; /* Center the avatar and add bottom margin */
+    display: block; /* Ensure the avatar is treated as a block element */
+}
+
 .brand {
     font-size: 24px;
     font-weight: bold;
 }
 
 .main {
-    width: 100%;
+    width: 80%;
     max-width: 95%;
     height: calc(100vh - 80px); /* Full height minus the navbar height */
     margin: 80px auto 20px auto; /* Adjusted margin to account for fixed navbar */
@@ -41,7 +64,8 @@ body {
 
 .upload-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     padding: 10px;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -68,6 +92,18 @@ body {
     justify-content: center;
     background-color: transparent;
     color: rgb(25, 109, 25);;
+    border: 1px transparent;
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.sidenav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: white;
     border: 1px transparent;
     border-radius: 50%;
     padding: 5px;
@@ -241,17 +277,52 @@ body {
     text-align: center; /* Ensure text is centered within the flex container */
 }
 
+.page-indicator {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
 .paginator span {
     width: auto; /* Adjust width to auto to prevent stretching */
     white-space: pre;
     text-align: center; /* Center text within the span */
 }
 
-/* Media Queries for responsive */
-@media (max-width: 768px) {
-    .upload-container {
-        flex-direction: column;
-    }
+
+/* Estilos para el side nav */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: #333333;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
 }
 
 /* Estilos para el popup */
@@ -300,4 +371,11 @@ body {
     word-wrap: break-word; /* Permite que las palabras largas se dividan */
     overflow: hidden; /* Oculta cualquier contenido que se desborde */
     text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto que se desborda */
+}
+
+/* Media Queries for responsive */
+@media (max-width: 768px) {
+    .upload-container {
+        flex-direction: column;
+    }
 }

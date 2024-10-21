@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pdfDoc = null;
     let currentPage = 1;
     const pagesToRenderInitially = 5; // Number of pages to render initially
-    const pagesToRenderOnNext = 2; // Number of pages to render on each next button click
+    const pagesToRenderOnNext = 5; // Number of pages to render on each next button click
 
     const spinner = document.getElementById('spinner');
     const pdfContainer = document.getElementById('pdf-container');
@@ -18,6 +18,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileNameInfo = document.getElementById('file-name-info');
     const fileSizeInfo = document.getElementById('file-size-info');
     const fileDateInfo = document.getElementById('file-date-info');
+
+    const sidenav = document.getElementById('sidenav');
+    const toggleSidenavButton = document.getElementById('toggle-sidenav');
+    const closeSidenavButton = document.getElementById('close-sidenav');
+
+    toggleSidenavButton.addEventListener('click', function() {
+        if (sidenav.style.width === '250px') {
+            sidenav.style.width = '0';
+        } else {
+            sidenav.style.width = '250px';
+        }
+    });
+
+    closeSidenavButton.addEventListener('click', function() {
+        sidenav.style.width = '0';
+    });
 
     fileInput.addEventListener('change', function(event) {
         var file = event.target.files[0];
