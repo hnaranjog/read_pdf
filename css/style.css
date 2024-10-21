@@ -421,6 +421,18 @@ body {
     border: 1px solid #2980b9;
 }
 
+/* Styles for zooming */
+.pdf-container.zoom-in {
+    transform: scale(1.5); /* Adjust the scale as needed */
+    transform-origin: center center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.pdf-container.zoom-out {
+    transform: scale(1); /* Reset to original scale */
+    transition: transform 0.3s ease-in-out;
+}
+
 /* Media Queries for responsive */
 @media (max-width: 768px) {
     .upload-container {

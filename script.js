@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     let pdfDoc = null;
     let currentPage = 1;
-    const pagesToRenderInitially = 5; // Number of pages to render initially
-    const pagesToRenderOnNext = 5; // Number of pages to render on each next button click
-
+   
     const spinner = document.getElementById('spinner');
     const pdfContainer = document.getElementById('pdf-container');
     const fileInput = document.getElementById('file-input');
@@ -89,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     totalPagesElement.textContent = pdf.numPages;
                 }
                 currentPage = 1; // Reset currentPage to 1
-                renderInitialPages();
+                renderAllPages();
             }).catch(function(error) {
                 console.error('Error loading PDF:', error);
                 alert('Error loading PDF: ' + error.message);
@@ -113,32 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    /* document.getElementById('prev-page').addEventListener('click', function() {
-        $('#book').turn('previous');
-        if (currentPage > 1) {
-            currentPage -= 2;
-            updatePaginator();
-        }
-    });
-
-    document.getElementById('next-page').addEventListener('click', async function() {
-        const turnContainer = document.getElementById('book');
-        const totalPages = pdfDoc.numPages;
-
-        if (currentPage + 2 <= totalPages) {
-            await renderPages(currentPage + 1, pagesToRenderOnNext, turnContainer);
-            currentPage += 2;
-            updatePaginator();
-        }
-
-        $('#book').turn('next');
-    }); */
-
     window.addEventListener('resize', function() {
         renderPDF('current');
     });
 
-    async function renderInitialPages() {
+    async function renderAllPages() {
         pdfContainer.innerHTML = ''; // Clear previous content
 
         const turnContainer = document.createElement('div');
@@ -146,23 +123,18 @@ document.addEventListener('DOMContentLoaded', function() {
         turnContainer.classList.add('turnjs');
         pdfContainer.appendChild(turnContainer);
 
-        await renderPages(currentPage, pagesToRenderInitially, turnContainer);
+        await renderPages(1, pdfDoc.numPages, turnContainer);
 
-        // Initialize the turn.js library after initial pages are rendered
+        // Initialize the turn.js library after all pages are rendered
         $(turnContainer).turn({
             width: pdfContainer.clientWidth,
             height: pdfContainer.clientHeight,
             autoCenter: true,
-            display: 'double',
-            elevation: 50,
-            gradients: true,
-            duration: 1000
+            display: 'double'
         });
 
-        spinner.style.display = 'none'; // Hide spinner after initial pages are rendered
+        spinner.style.display = 'none'; // Hide spinner after all pages are rendered
         pdfContainer.style.visibility = 'visible'; // Show PDF container
-
-        updatePaginator(); // Update paginator after initial pages are rendered
     }
 
     async function renderPages(startPage, numPages, turnContainer) {
@@ -182,7 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function renderPage(pageNum, turnContainer) {
         try {
-
             if (pageNum > pdfDoc.numPages) {
                 console.error(`Cannot render page ${pageNum}, maximum value is ${pdfDoc.numPages}`);
                 return;
@@ -194,6 +165,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const context = canvas.getContext('2d');
             canvas.height = viewport.height;
             canvas.width = viewport.width;
+
+            // Adjust canvas size to fit the container
+            const containerWidth = pdfContainer.clientWidth;
+            const containerHeight = pdfContainer.clientHeight;
+            const scale = Math.min(containerWidth / viewport.width, containerHeight / viewport.height);
+            canvas.style.width = `${viewport.width * scale}px`;
+            canvas.style.height = `${viewport.height * scale}px`;
 
             const renderContext = {
                 canvasContext: context,
@@ -210,18 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
             $(turnContainer).turn('addPage', pageDiv, pageNum);
         } catch (error) {
             console.error('Error rendering page ' + pageNum + ': ' + error);
-        }
-    }
-
-    // Dummy function to check if the file is an upload file
-    function isUploadFile() {
-        // Implement your logic to determine if the file is an upload file
-        return false; // Change this to your actual condition
-    }
-
-    function updatePaginator() {
-        if (currentPageElement) {
-            currentPageElement.textContent = currentPage;
         }
     }
 
