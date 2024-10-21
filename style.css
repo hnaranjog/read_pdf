@@ -37,7 +37,7 @@ body {
 .avatar {
     background: #aaa;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 30%;
     margin: 0 auto 10px auto; /* Center the avatar and add bottom margin */
     display: block; /* Ensure the avatar is treated as a block element */
 }
@@ -48,7 +48,7 @@ body {
 }
 
 .main {
-    width: 80%;
+    width: 1400px;
     max-width: 95%;
     height: calc(100vh - 80px); /* Full height minus the navbar height */
     margin: 80px auto 20px auto; /* Adjusted margin to account for fixed navbar */

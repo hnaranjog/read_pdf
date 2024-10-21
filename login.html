@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLite Integration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main">
+        <h1>Users</h1>
+        <ul id="user-list"></ul>
+        <form id="user-form">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <button type="submit">Add User</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userList = document.getElementById('user-list');
+            const userForm = document.getElementById('user-form');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+
+            // Fetch users from the backend
+            function fetchUsers() {
+                fetch('http://localhost:3000/api/users')
+                    .then(response => response.json())
+                    .then(data => {
+                        userList.innerHTML = '';
+                        data.users.forEach(user => {
+                            const li = document.createElement('li');
+                            li.textContent = `${user.name} (${user.email})`;
+                            userList.appendChild(li);
+                        });
+                    });
+            }
+
+            // Add a new user
+            userForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const name = nameInput.value;
+                const email = emailInput.value;
+
+                fetch('http://localhost:3000/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    fetchUsers();
+                    userForm.reset();
+                });
+            });
+
+            // Initial fetch
+            fetchUsers();
+        });
+    </script>
+</body>
+</html>

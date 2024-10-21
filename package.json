@@ -11,9 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
     "flipbook": "^0.0.2",
     "pdfjs-dist": "^4.7.76",
-    "turn.js": "^1.0.5"
+    "sqlite3": "^5.1.7",
+    "turn.js": "^1.0.2"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
