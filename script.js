@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the slider
+    $("#slider").slider({
+        range: true,
+        min: 0,
+        max: 100,
+        values: [20, 80],
+        slide: function(event, ui) {
+            $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+        }
+    });
+    $("#amount").val("$" + $("#slider").slider("values", 0) +
+        " - $" + $("#slider").slider("values", 1));
+        
     let pdfDoc = null;
     let currentPage = 1;
     const pagesToRenderInitially = 5; // Number of pages to render initially
@@ -68,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var typedarray = new Uint8Array(this.result);
 
             // Set the workerSrc property to the CDN path
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+            pdfjsLib.GlobalWorkerOptions.workerSrc = './lib/pdfjs/pdf.worker.min.js';
 
             pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
                 pdfDoc = pdf;
@@ -100,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('prev-page').addEventListener('click', function() {
+    /* document.getElementById('prev-page').addEventListener('click', function() {
         $('#book').turn('previous');
         if (currentPage > 1) {
             currentPage -= 2;
@@ -119,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('#book').turn('next');
-    });
+    }); */
 
     window.addEventListener('resize', function() {
         renderPDF('current');
@@ -140,7 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
             width: pdfContainer.clientWidth,
             height: pdfContainer.clientHeight,
             autoCenter: true,
-            display: 'double'
+            display: 'double',
+            elevation: 50,
+            gradients: true,
+            duration: 1000
         });
 
         spinner.style.display = 'none'; // Hide spinner after initial pages are rendered
@@ -166,6 +182,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function renderPage(pageNum, turnContainer) {
         try {
+
+            if (pageNum > pdfDoc.numPages) {
+                console.error(`Cannot render page ${pageNum}, maximum value is ${pdfDoc.numPages}`);
+                return;
+            }
+            
             const page = await pdfDoc.getPage(pageNum);
             const viewport = page.getViewport({ scale: 1.5 });
             const canvas = document.createElement('canvas');
