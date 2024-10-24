@@ -1,0 +1,13 @@
+{
+    "name": "readPDF",
+    "version": "1.0",
+    "manifest_version": 3,
+    "description": "Read PDF files",
+    "icons": {
+        "128": "assets/img/icon128.png"
+    },
+    "action":{
+        "default_popup": "index.html"
+    }
+    
+}

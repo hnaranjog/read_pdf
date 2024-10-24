@@ -3,7 +3,8 @@
   "configurations": [
     {
       "name": "Launch Chrome against localhost",
-      "type": "chrome",
+      "type": "msedge",
+      "runtimeExecutable": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
       "request": "launch",
       "url": "http://127.0.0.1:9000",
       "webRoot": "${workspaceFolder}",

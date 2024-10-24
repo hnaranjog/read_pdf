@@ -4,13 +4,19 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.app{
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+}
+
 .navbar {
     width: 100%;
     background-color: #333333; /* Gris Oscuro */
     color: white;
     padding: 10px 20px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between; /* Change to space-between to separate left and right content */
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -19,11 +25,21 @@ body {
     z-index: 1000;
 }
 
+.navbar .left-content {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .right-content {
+    display: flex;
+    align-items: center;
+}
+
 /* Estilos para el botón de navegación */
 .navbar .sidenav-btn {
     background-color: transparent;
     border: none;
-    color: white;
+    color: #FF5722;
     cursor: pointer;
     font-size: 24px;
     padding: 15px;
@@ -32,6 +48,14 @@ body {
 
 .navbar .sidenav-btn .material-symbols-outlined {
     font-size: 24px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    box-shadow: whitesmoke;
+    border-radius: 50%;
+    padding-right: 15px;
 }
 
 .avatar {
@@ -47,7 +71,14 @@ body {
     font-weight: bold;
 }
 
-.main {
+main {
+    height: 90%;
+    top: 20px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    padding: 20px;
     width: 1400px;
     height: calc(100vh - 80px); /* Full height minus the navbar height */
     margin: 80px auto 20px auto; /* Adjusted margin to account for fixed navbar */
@@ -61,14 +92,22 @@ body {
     overflow: hidden; /* Prevent scrolling */
 }
 
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+}
+
 .upload-container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 10px;
     padding-left: 1rem;
     padding-right: 1rem;
-    margin: 5px;
     
 }
 
@@ -136,7 +175,7 @@ body {
     margin-top: 1rem;
     padding-left: 15px;
     font-size: 16px;
-    color: rgb(25, 109, 25);
+    color: #f3f3f3;
 }
 
 .btn-style {
@@ -154,11 +193,8 @@ body {
 }
 
 .pdf-container {
-    /* width: 1200px;
-    height: 720px; */
-    width: 100%;
-    height: 100%;
-    position: relative;
+    width: 80%;
+    height: 90%;
     overflow: hidden;
     border: 1px solid #CCCCCC; /* Gris Claro */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -171,13 +207,69 @@ body {
     visibility: hidden; /* Hide initially */
 }
 
+.progress-bar {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    background-color: #e5f3e5;
+    color: #e5f3e5;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.progress-bar-inner {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    height: 100%;
+    width: 0;
+    background-color: #f3f3f3; /* Initial color */
+    border-radius: 5px;
+    transition: width 0.3s ease, background-color 0.3s ease; /* Add transition for smooth color change */
+}
+
+.progress-bar-inner::after {
+    content: attr(data-value); /* Use a custom attribute to set the value */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #333; /* Text color */
+    font-weight: bold;
+}
+
+footer {
+    width: 100%;
+    background-color: #FF5722;
+    color: #f3f3f3;
+    text-align: center;
+    padding: 5px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+footer a {
+    color: rgb(25, 109, 25);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+
 .turnjs {
-    width: 1020px;  
-    height: 710px;
-    position: relative;
+    width: 100%;  
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .pdf-description {
@@ -268,28 +360,11 @@ body {
 
 .paginator {
     display: flex;
-    justify-content: center; /* Center the text horizontally */
-    align-items: center; /* Center the text vertically */
-    padding: 0.5rem;
-    width: 40%;
-    font-family: Arial, sans-serif;
-    color: #696666;
-    border: 1px dashed #696666; /* Change border to dashed line */
-    border-radius: 5px;
-    font-weight: bold; /* Make the text bold */
-    text-align: center; /* Ensure text is centered within the flex container */
-}
-
-.page-indicator {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0 10px;
-}
-
-.paginator span {
-    width: auto; /* Adjust width to auto to prevent stretching */
-    white-space: pre;
-    text-align: center; /* Center text within the span */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 10px;
+    gap: 10px;
+    margin: 10px 0;
 }
 
 .profile {
@@ -392,45 +467,6 @@ body {
     word-wrap: break-word; /* Permite que las palabras largas se dividan */
     overflow: hidden; /* Oculta cualquier contenido que se desborde */
     text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto que se desborda */
-}
-
-
-/* Customize the slider */
-#slider {
-    margin: 20px 0;
-}
-
-.ui-slider {
-    background: #ddd;
-    border: 1px solid #ccc;
-    height: 10px;
-    border-radius: 5px;
-}
-
-.ui-slider-handle {
-    background: #f39c12;
-    border: 1px solid #e67e22;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    top: -6px;
-}
-
-.ui-slider-range {
-    background: #3498db;
-    border: 1px solid #2980b9;
-}
-
-/* Styles for zooming */
-.pdf-container.zoom-in {
-    transform: scale(1.5); /* Adjust the scale as needed */
-    transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-}
-
-.pdf-container.zoom-out {
-    transform: scale(1); /* Reset to original scale */
-    transition: transform 0.3s ease-in-out;
 }
 
 /* Media Queries for responsive */
