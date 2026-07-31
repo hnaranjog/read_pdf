@@ -1,0 +1,236 @@
+/* ============================================================
+   Tema read_pdf — evolución del diseño legacy (naranja #FF5722)
+   Variables CSS + modos de color: normal / sepia / dark / paper
+   ============================================================ */
+
+.rk-theme {
+  --rk-primary: #ff5722;
+  --rk-primary-hover: #ff8a50;
+  --rk-on-primary: #ffffff;
+
+  --rk-bg: #f0f0f0;
+  --rk-surface: #ffffff;
+  --rk-surface-alt: #333333;
+  --rk-on-surface: #1f1f1f;
+  --rk-on-surface-alt: #f3f3f3;
+  --rk-muted: #696666;
+  --rk-border: #cccccc;
+  --rk-shadow: rgba(0, 0, 0, 0.15);
+  --rk-backdrop: rgba(0, 0, 0, 0.4);
+
+  /* Filtro aplicado a los canvas de página según el modo */
+  --rk-page-filter: none;
+  /* Fondo del área de lectura */
+  --rk-reader-bg: var(--rk-surface);
+
+  --rk-radius: 5px;
+  --rk-radius-lg: 15px;
+  --rk-navbar-height: 70px;
+  --rk-footer-height: 34px;
+
+  color-scheme: light;
+  background: var(--rk-bg);
+  color: var(--rk-on-surface);
+}
+
+/* --- Sepia / papel antiguo: reduce fatiga visual --- */
+.rk-theme[data-color-mode='sepia'] {
+  --rk-bg: #ece0d1;
+  --rk-surface: #f4ecd8;
+  --rk-on-surface: #433422;
+  --rk-muted: #7a6a58;
+  --rk-border: #d3c4a8;
+  --rk-reader-bg: #e6d9c3;
+  --rk-page-filter: sepia(0.35) brightness(0.97);
+}
+
+/* --- Oscuro invertido: filtro invert sobre las páginas --- */
+.rk-theme[data-color-mode='dark'] {
+  --rk-bg: #121212;
+  --rk-surface: #1e1e1e;
+  --rk-surface-alt: #2a2a2a;
+  --rk-on-surface: #e8e8e8;
+  --rk-muted: #9a9a9a;
+  --rk-border: #3d3d3d;
+  --rk-shadow: rgba(0, 0, 0, 0.5);
+  --rk-reader-bg: #161616;
+  --rk-page-filter: invert(0.92) hue-rotate(180deg);
+
+  color-scheme: dark;
+}
+
+/* --- Textura de papel: fondo cálido + grano sutil --- */
+.rk-theme[data-color-mode='paper'] {
+  --rk-bg: #e8e2d5;
+  --rk-surface: #faf6ec;
+  --rk-on-surface: #3a332a;
+  --rk-muted: #857a68;
+  --rk-border: #d8cfbc;
+  --rk-reader-bg: #efe8d8;
+  --rk-page-filter: sepia(0.15) contrast(0.98);
+}
+
+.rk-theme[data-color-mode='paper'] .rk-reader {
+  background-image:
+    radial-gradient(ellipse at center, transparent 60%, rgba(120, 100, 60, 0.08) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(120, 100, 60, 0.015) 3px,
+      rgba(120, 100, 60, 0.015) 4px
+    );
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+.rk-theme,
+.rk-theme * {
+  box-sizing: border-box;
+}
+
+.rk-theme {
+  font-family: Arial, 'Segoe UI', sans-serif;
+  margin: 0;
+  min-height: 100%;
+}
+
+.rk-theme button {
+  font-family: inherit;
+}
+
+.rk-btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: var(--rk-radius);
+  background: var(--rk-primary);
+  color: var(--rk-on-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.rk-btn:hover {
+  background: var(--rk-primary-hover);
+}
+
+.rk-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.rk-btn--ghost {
+  background: transparent;
+  color: var(--rk-primary);
+  border: 1px solid transparent;
+}
+
+.rk-btn--ghost:hover {
+  background: color-mix(in srgb, var(--rk-primary) 12%, transparent);
+}
+
+/* Iconos redondos tipo legacy (sidenav toggle, info) */
+.rk-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.rk-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================
+   Área de lectura y páginas
+   ============================================================ */
+
+.rk-reader {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--rk-reader-bg);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--rk-radius);
+  box-shadow: 0 0 10px var(--rk-shadow);
+}
+
+.rk-book {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.rk-book .rk-page {
+  background: #fff;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.rk-book .rk-page canvas {
+  display: block;
+  object-fit: fill;
+  filter: var(--rk-page-filter);
+  transition: filter 0.3s ease;
+}
+
+/* Sombra del lomo — portada del efecto legacy .page-shadow */
+.rk-book::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 12px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 0, 0, 0.12) 45%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.12) 55%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* En modo single la sombra del lomo no aplica */
+.rk-book[data-display-mode='single']::after {
+  display: none;
+}
+
+/* ============================================================
+   Spinner (legacy)
+   ============================================================ */
+
+.rk-spinner {
+  width: 64px;
+  height: 64px;
+  border: 8px solid var(--rk-border);
+  border-top-color: var(--rk-primary);
+  border-radius: 50%;
+  animation: rk-spin 1.2s linear infinite;
+}
+
+@keyframes rk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
