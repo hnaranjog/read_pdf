@@ -2,3 +2,25 @@
 node_modules/
 npm-debug.log
 yarn-error.log
+pnpm-debug.log
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Tauri
+apps/desktop/src-tauri/target/
+
+# Datos locales del server Express
+server/data/
+
+# Editors
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Backup
+backup/

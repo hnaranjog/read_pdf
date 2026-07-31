@@ -1,0 +1,40 @@
+# OpenSpec configuration — bootstrapped by sdd-init
+# Do not edit manually; regenerated on re-init.
+
+schema_version: "1.0"
+project: read_pdf
+language: typescript
+stack:
+  runtime: node
+  node_version: ">=20"
+  package_manager: pnpm
+  pnpm_version: ">=9"
+  typescript_version: "5.6.3"
+  strict_mode: true
+frameworks:
+  frontend: vue3
+  desktop: tauri2
+  backend: express
+  test_runner: vitest
+monorepo: true
+workspace_packages:
+  - packages/shared-types
+  - packages/core-pdf-engine
+  - packages/flip-view-engine
+  - packages/storage-layer
+  - packages/reader-ui-kit
+  - packages/playground
+  - apps/web
+  - apps/desktop
+  - server
+testing:
+  strict_tdd: false
+  test_command: "pnpm test"
+  test_configs:
+    - package: "@readpdf/storage-layer"
+      config: packages/storage-layer/vitest.config.ts
+      tests: 5
+  coverage: unsupported
+artifacts:
+  init_date: "2026-07-28"
+  backends: [engram, openspec]

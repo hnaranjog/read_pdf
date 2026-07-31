@@ -1,0 +1,23 @@
+{
+  "name": "@readpdf/storage-layer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@readpdf/shared-types": "workspace:*",
+    "@tauri-apps/plugin-sql": "^2.3.0",
+    "sql.js": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/sql.js": "^1.4.9",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  }
+}

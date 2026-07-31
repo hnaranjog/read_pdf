@@ -1,0 +1,31 @@
+{
+  "name": "@readpdf/desktop",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@readpdf/core-pdf-engine": "workspace:*",
+    "@readpdf/reader-ui-kit": "workspace:*",
+    "@readpdf/shared-types": "workspace:*",
+    "@readpdf/storage-layer": "workspace:*",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-dialog": "^2.4.0",
+    "@tauri-apps/plugin-fs": "^2.4.2",
+    "@tauri-apps/plugin-sql": "^2.3.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^7.1.7",
+    "vue-tsc": "^3.0.0"
+  }
+}

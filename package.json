@@ -1,23 +1,27 @@
 {
   "name": "read_pdf",
-  "version": "1.0.0",
-  "description": "Read-pdf version web",
-  "main": "script.js",
+  "version": "2.0.0",
+  "private": true,
+  "description": "ReadPDF — lector PDF con experiencia de libro (Tauri desktop + web)",
   "scripts": {
-    "start": "http-server -a 127.0.0.1 -p 9000 -c-1 .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:web": "pnpm --filter @readpdf/web dev",
+    "dev:desktop": "pnpm --filter @readpdf/desktop tauri dev",
+    "dev:server": "pnpm --filter @readpdf/server dev",
+    "dev:playground": "pnpm --filter @readpdf/playground dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
-    "pdfjs-dist": "^4.7.76",
-    "sqlite3": "^5.1.7"
-  },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "http-server": "^14.1.1"
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.61.1",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
   }
 }
